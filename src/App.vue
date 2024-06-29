@@ -46,6 +46,7 @@ const changeVoice = () => {
 }
 
 const play = () => {
+  typedWord.value = ''
   typedWordInput.value.focus()
 
   speech.pause()
