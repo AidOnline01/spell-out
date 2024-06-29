@@ -29,7 +29,7 @@ const generateRandomWord = (length: number): string => {
 
   let word = ''
   for (let i = 0; i <= length; i++) {
-    const randomLetter = letters[Math.round(Math.random() * 26)]
+    const randomLetter = letters[Math.round(Math.random() * 25)]
     word += randomLetter
   }
 
