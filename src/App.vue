@@ -48,12 +48,12 @@ const play = () => {
   speech.pause()
 
   isChecked.value = false
-  randomWord.value = generateRandomWord(Math.round(Math.random() * 15 + 5))
+  randomWord.value = generateRandomWord(Math.round(Math.random() * 10 + 5))
 
   changeVoice()
 
   speech.speak({
-    text: randomWord.value.split('').join('. '),
+    text: 'I will start now... ' + randomWord.value.split('').join('. '),
     queue: false
   })
 }
