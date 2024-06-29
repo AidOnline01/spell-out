@@ -38,6 +38,7 @@ const generateRandomWord = (length: number): string => {
 
 const randomWord = ref('')
 const typedWord = ref('')
+const typedWordInput = ref()
 
 const changeVoice = () => {
   const randomVoice = voices[Math.round(Math.random() * (voices.length - 1))]
@@ -45,6 +46,8 @@ const changeVoice = () => {
 }
 
 const play = () => {
+  typedWordInput.value.focus()
+
   speech.pause()
 
   isChecked.value = false
@@ -75,7 +78,7 @@ const check = () => {
       <div :class="['answer', isCorrect ? 'is-correct' : 'is-incorrect']" v-if="isChecked">
         {{ randomWord }}
       </div>
-      <input class="spell-out" type="text" v-model="typedWord" />
+      <input class="spell-out" type="text" v-model="typedWord" ref="typedWordInput" />
       <button clas="check" @click="check()">Check</button>
     </div>
   </div>
