@@ -45,6 +45,13 @@ const changeVoice = () => {
   speech.setVoice(randomVoice.name)
 }
 
+const speak = (word) => {
+  speech.speak({
+    text: 'I will start now... ' + word.split('').join('. '),
+    queue: false
+  })
+}
+
 const play = () => {
   typedWord.value = ''
   typedWordInput.value.focus()
@@ -56,10 +63,13 @@ const play = () => {
 
   changeVoice()
 
-  speech.speak({
-    text: 'I will start now... ' + randomWord.value.split('').join('. '),
-    queue: false
-  })
+  speak(randomWord.value)
+}
+
+const repeat = () => {
+  speech.pause()
+
+  speak(randomWord.value)
 }
 
 const isChecked = ref(false)
@@ -81,6 +91,7 @@ const check = () => {
       </div>
       <input class="spell-out" type="text" v-model="typedWord" ref="typedWordInput" />
       <button clas="check" @click="check()">Check</button>
+      <button class="repeat" @click="repeat()">Repeat</button>
     </div>
   </div>
 </template>
@@ -120,5 +131,10 @@ input {
 
 .check {
   display: block;
+}
+
+.repeat {
+  display: block;
+  margin-top: 10px;
 }
 </style>
