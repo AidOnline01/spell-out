@@ -48,7 +48,7 @@ const play = () => {
   speech.pause()
 
   isChecked.value = false
-  randomWord.value = generateRandomWord(Math.round(Math.random() * 10 + 5))
+  randomWord.value = generateRandomWord(Math.round(Math.random() * 10))
 
   changeVoice()
 
