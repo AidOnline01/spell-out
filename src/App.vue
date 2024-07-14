@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import Speech from 'speak-tts'
 import { ref } from 'vue'
+import words from 'an-array-of-english-words'
 
 const speech = new Speech()
-let voices = []
+let voices = ref([])
+
+const changeVoice = (voiceName) => {
+  speech.setVoice(voiceName)
+}
 
 speech
   .init({
@@ -18,32 +23,18 @@ speech
       'Microsoft David - English (United States)',
       'Microsoft Mark - English (United States)'
     ]
-    voices = data.voices.filter(
+    voices.value = data.voices.filter(
       (voice) => voice.lang.startsWith('en-') && !excludedVoices.includes(voice.name)
     )
+
+    changeVoice(voices.value[0].name)
   })
 
-const generateRandomWord = (length: number): string => {
-  const alphabet = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'
-  const letters = alphabet.split(' ')
-
-  let word = ''
-  for (let i = 0; i <= length; i++) {
-    const randomLetter = letters[Math.round(Math.random() * 25)]
-    word += randomLetter
-  }
-
-  return word
-}
+const generateRandomWord = (): string => words[Math.round(Math.random() * words.length - 1)]
 
 const randomWord = ref('')
 const typedWord = ref('')
 const typedWordInput = ref()
-
-const changeVoice = () => {
-  const randomVoice = voices[Math.round(Math.random() * (voices.length - 1))]
-  speech.setVoice(randomVoice.name)
-}
 
 const speak = (word) => {
   speech.speak({
@@ -59,9 +50,7 @@ const play = () => {
   speech.pause()
 
   isChecked.value = false
-  randomWord.value = generateRandomWord(10)
-
-  changeVoice()
+  randomWord.value = generateRandomWord()
 
   speak(randomWord.value)
 }
@@ -85,6 +74,16 @@ const check = () => {
 <template>
   <div id="app">
     <div class="wrapper">
+      <select
+        class="voices"
+        name="voices"
+        @change="(e) => changeVoice((e.target as HTMLSelectElement).value)"
+      >
+        <option v-for="(voice, index) in voices" :value="voice.name" :key="index">
+          {{ voice.name }}
+        </option>
+      </select>
+
       <button @click="play()" class="play">Play</button>
       <div :class="['answer', isCorrect ? 'is-correct' : 'is-incorrect']" v-if="isChecked">
         {{ randomWord }}
@@ -108,6 +107,11 @@ const check = () => {
 button,
 input {
   font-size: inherit;
+}
+
+.voices {
+  margin-bottom: 20px;
+  padding: 10px;
 }
 
 .answer {
