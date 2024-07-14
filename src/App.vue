@@ -14,8 +14,7 @@ speech
   .init({
     volume: 0.5,
     lang: 'en-GB',
-    rate: 1,
-    pitch: 1
+    rate: 1
   })
   .then((data) => {
     const excludedVoices = [
@@ -30,7 +29,11 @@ speech
     changeVoice(voices.value[0].name)
   })
 
-const generateRandomWord = (): string => words[Math.round(Math.random() * words.length - 1)]
+const generateRandomWord = (): string => {
+  const filteredWords = words.filter((word) => true)
+
+  return filteredWords[Math.round(Math.random() * filteredWords.length - 1)]
+}
 
 const randomWord = ref('')
 const typedWord = ref('')
@@ -38,7 +41,7 @@ const typedWordInput = ref()
 
 const speak = (word) => {
   speech.speak({
-    text: 'I will start now... ' + word.split('').join('. '),
+    text: 'I will start now... ' + word.split('').join('. next . '),
     queue: false
   })
 }
@@ -73,7 +76,7 @@ const check = () => {
 
 <template>
   <div id="app">
-    <div class="wrapper">
+    <form class="wrapper" @submit.prevent="check()">
       <select
         class="voices"
         name="voices"
@@ -84,14 +87,20 @@ const check = () => {
         </option>
       </select>
 
-      <button @click="play()" class="play">Play</button>
+      <button type="button" @click="play()" class="play">Play</button>
       <div :class="['answer', isCorrect ? 'is-correct' : 'is-incorrect']" v-if="isChecked">
         {{ randomWord }}
       </div>
-      <input class="spell-out" type="text" v-model="typedWord" ref="typedWordInput" />
-      <button clas="check" @click="check()">Check</button>
-      <button class="repeat" @click="repeat()">Repeat</button>
-    </div>
+
+      <input
+        class="spell-out"
+        :type="isChecked ? 'text' : 'password'"
+        v-model="typedWord"
+        ref="typedWordInput"
+      />
+      <button type="button" class="check" @click="check()">Check</button>
+      <button type="button" class="repeat" @click="repeat()">Repeat</button>
+    </form>
   </div>
 </template>
 
@@ -115,6 +124,8 @@ input {
 }
 
 .answer {
+  padding: 10px;
+  letter-spacing: 2px;
 }
 
 .answer.is-correct {
@@ -131,10 +142,14 @@ input {
 }
 
 .spell-out {
+  padding: 10px;
+  letter-spacing: 2px;
+  font-family: roboto;
 }
 
 .check {
   display: block;
+  margin-top: 10px;
 }
 
 .repeat {
